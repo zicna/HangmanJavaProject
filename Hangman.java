@@ -1,7 +1,39 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Hangman{
+    public static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
-        System.out.println(randomWord());
+        String wordToGuess = randomWord(); 
+        System.out.println(wordToGuess);
+
         System.out.println(gallows(0));
+
+        System.out.print("Word:\t");
+        // System.out.println(Arrays.toString(stringToArray(randomWord())));
+        String[] arrayOfStrings = stringToArray(wordToGuess);
+        printPlaceholders(arrayOfStrings);
+
+        System.out.println("Misses: ");
+        String[] misses = new String[6];
+        System.out.print("Guess: ");
+        String guessChar = scan.nextLine();
+
+        if(checkGuess(guessChar,arrayOfStrings)){
+            updatePlaceholders(arrayOfStrings, guessChar);
+        }else{
+            printPlaceholders(arrayOfStrings);
+            for(int i =0; i < misses.length; i++){
+                if(misses[i].equals(null)){
+                    misses[i] = guessChar;
+                }
+            }
+        }
+        System.out.println("Misses: " + Arrays.toString(misses));
+
+
+
+    scan.close();
     }
 
     public static String randomWord(){
@@ -9,6 +41,41 @@ public class Hangman{
         
         int randomNumber = (int)(Math.random() * words.length);
         return words[randomNumber];
+    }
+
+    public static boolean checkGuess(String guessChar, String[] arrayOfStrings){
+        boolean check = false;
+        for(int i =0; i < arrayOfStrings.length; i++){
+            if(arrayOfStrings[i].equals(guessChar)){
+                check = true;
+            }
+        }
+        return check;
+    }
+
+    public static String[] stringToArray(String word){
+        return (word.split(""));
+    }
+
+    public static void printPlaceholders(String[] array){
+        for(int i =0; i < array.length; i++){
+            System.out.print("_ ");
+        }
+        System.out.print("\n");
+    }
+
+    public static void updatePlaceholders(String[] array, String guessChar){
+        for(int i =0; i < array.length; i++){
+            if(array[i].equals(guessChar)){
+                System.out.println(guessChar + " ");
+            }else{
+                System.out.print("_ ");
+            }
+        }
+    }   
+
+    public static void printMissedGuesses(String guessChar){
+        System.out.print(guessChar);
     }
 
     public static String gallows(int misses){
